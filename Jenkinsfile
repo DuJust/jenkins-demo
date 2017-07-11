@@ -28,6 +28,14 @@ throttle(['throttleDocker']) {
             ./ci/test/stress.sh
           '''
         }
+        stage('Deploy to Docker Swarm') {
+          sh '''
+            version=$(date +%Y%m%d%H%M)
+            ./cd/publish.sh alpha dtr.caleb.boxboat.net $version
+            eval $(</home/ubuntu/env.sh)
+            ./cd/deploy-swarm.sh alpha dtr.caleb.boxboat.net $version
+          '''
+        }
       }
       finally {
         stage('Cleanup') {
